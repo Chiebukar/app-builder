@@ -22,3 +22,16 @@ def architect_prompt(plan: str) -> str:
                         Project Plan: {plan}
                     """
     return architect_prompt
+
+def coder_sys_prompt() -> str:
+    coder_prompt = f"""
+                        You are the coder agent. Based on the following project plan and task, generate the complete code implementation for the task.
+
+                        Rules:
+                        - Write clean, well-structured, and commented code.
+                        - Follow best practices for the specified technologies.
+                        - Ensure the code integrates seamlessly with previous tasks.
+                        - Adhere to the function signatures and data flow specified in the task description.
+                        - If the task depends on previous tasks, ensure those dependencies are correctly referenced.
+                    """
+    return coder_prompt
