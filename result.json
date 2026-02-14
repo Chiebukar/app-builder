@@ -1,3 +1,76 @@
 {
-    "code": "```html\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <!-- Basic document metadata -->\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Simple Calculator</title>\n\n    <!-- Link to the stylesheet that will style the calculator -->\n    <link rel=\"stylesheet\" href=\"styles.css\">\n</head>\n<body>\n\n    <!-- --------------------------------------------------------------\n         Calculator root element \u2013 all UI lives inside this container.\n         -------------------------------------------------------------- -->\n    <div id=\"calculator\">\n\n        <!-- Display area \u2013 shows the current expression and the result -->\n        <div id=\"display\" class=\"display\"></div>\n\n        <!-- ----------------------------------------------------------\n             Buttons container \u2013 a grid of all calculator keys.\n             ------------------------------------------------------- -->\n        <div class=\"buttons\">\n\n            <!-- Row 1 -->\n            <button data-type=\"clear\"   data-value=\"C\">C</button>\n            <button data-type=\"delete\"  data-value=\"\u2190\">&larr;</button>\n            <button data-type=\"operator\" data-value=\"/\">&#247;</button>\n            <button data-type=\"operator\" data-value=\"*\">&#215;</button>\n\n            <!-- Row 2 -->\n            <button data-type=\"digit\"    data-value=\"7\">7</button>\n            <button data-type=\"digit\"    data-value=\"8\">8</button>\n            <button data-type=\"digit\"    data-value=\"9\">9</button>\n            <button data-type=\"operator\" data-value=\"-\">&#8722;</button>\n\n            <!-- Row 3 -->\n            <button data-type=\"digit\"    data-value=\"4\">4</button>\n            <button data-type=\"digit\"    data-value=\"5\">5</button>\n            <button data-type=\"digit\"    data-value=\"6\">6</button>\n            <button data-type=\"operator\" data-value=\"+\">+</button>\n\n            <!-- Row 4 -->\n            <button data-type=\"digit\"    data-value=\"1\">1</button>\n            <button data-type=\"digit\"    data-value=\"2\">2</button>\n            <button data-type=\"digit\"    data-value=\"3\">3</button>\n            <button data-type=\"equals\"  data-value=\"=\">=</button>\n\n            <!-- Row 5 -->\n            <button data-type=\"digit\"    data-value=\"0\" class=\"zero\">0</button>\n            <button data-type=\"decimal\"  data-value=\".\">.</button>\n        </div>\n    </div>\n\n    <!-- Load the JavaScript that will handle the calculator logic -->\n    <script src=\"app.js\"></script>\n</body>\n</html>\n```\n\n**Explanation of the markup**\n\n* **`<div id=\"calculator\">`** \u2013 the main wrapper; CSS will size and position it.\n* **`<div id=\"display\" class=\"display\"></div>`** \u2013 empty element that JavaScript updates with the current input / result.\n* **Buttons**\n  * Every button receives a `data-type` attribute that tells the script what kind of key it is (`digit`, `operator`, `clear`, `delete`, `decimal`, `equals`).\n  * `data-value` holds the actual character/symbol that should be processed.\n  * The visual label of the button is the same character (or a HTML entity for nicer symbols).\n  * The `class=\"zero\"` on the \u201c0\u201d button is optional \u2013 it can be used by CSS to make the zero button span two columns if desired.\n\nThe file links to **`styles.css`** for styling and **`app.js`** for the interactive behavior, satisfying the requirements of the task."
+    "task_plan": {
+        "plan": {
+            "name": "Simple Calculator Web App",
+            "description": "A simple web-based calculator that performs basic arithmetic operations",
+            "technologies": [
+                "HTML5",
+                "CSS3",
+                "Vanilla JavaScript"
+            ],
+            "features": [
+                "User interface with display and buttons for digits (0-9) and operations (+, -, *, /)",
+                "Clear (C) and equals (=) functionality",
+                "Keyboard input support for numbers and operators",
+                "Responsive design for desktop and mobile browsers",
+                "Error handling for division by zero and invalid input"
+            ],
+            "files": [
+                {
+                    "path": "index.html",
+                    "purpose": "HTML skeleton containing the calculator layout and linking CSS/JS files"
+                },
+                {
+                    "path": "styles.css",
+                    "purpose": "Styling for the calculator UI, making it responsive and visually appealing"
+                },
+                {
+                    "path": "app.js",
+                    "purpose": "JavaScript logic handling button clicks, keyboard input, calculations, and display updates"
+                },
+                {
+                    "path": "README.md",
+                    "purpose": "Project overview, setup instructions, and usage guide"
+                }
+            ]
+        },
+        "tasks": [
+            {
+                "filepath": "index.html",
+                "title": "Create HTML skeleton for calculator",
+                "description": "Implement the `index.html` file. Define the basic HTML5 document structure and include:\n- A `<div id=\"calculator\">` container.\n- An `<input type=\"text\" id=\"display\" readonly>` element for showing the current expression/result.\n- A `<div class=\"buttons\">` containing button elements for digits 0\u20119, operations (+, -, *, /), clear (C), and equals (=). Use `data-value` attributes on buttons to store their functional value.\n- Link the external stylesheet `styles.css` and script `app.js` at the end of the body.\nThe HTML layout provides the DOM elements that `styles.css` will style and `app.js` will query for event handling. No dependencies on prior tasks; this is the foundation for subsequent CSS and JS integration.",
+                "integration_details": "The file will be served as the entry point. CSS will target IDs/classes defined here (`#calculator`, `#display`, `.buttons button`). JavaScript will use `document.getElementById('display')` and `document.querySelectorAll('.buttons button')` to attach listeners."
+            },
+            {
+                "filepath": "styles.css",
+                "title": "Style calculator UI and ensure responsiveness",
+                "description": "Implement the `styles.css` file. Define styles for:\n- The overall layout (`#calculator`) using Flexbox/Grid to center the calculator.\n- The display input (`#display`) with appropriate font size, padding, and right\u2011aligned text.\n- Buttons (`.buttons button`) with uniform size, hover/focus states, and a visual distinction for operators and the equals button (using classes like `.operator` and `.equals`).\n- Media queries to adjust button size and layout for mobile screens (max\u2011width: 600px).\nThe stylesheet relies on the element IDs/classes introduced in `index.html` and will be loaded before `app.js` runs, ensuring the UI is ready for JavaScript interactions.",
+                "integration_details": "Selectors match the HTML IDs/classes. No imports needed. JavaScript does not import CSS, but the visual layout defined here is required for user interaction."
+            },
+            {
+                "filepath": "app.js",
+                "title": "Initialize JavaScript module and attach UI event listeners",
+                "description": "Implement the initial part of `app.js`. Define the following constants and variables:\n- `const display = document.getElementById('display');`\n- `const buttons = document.querySelectorAll('.buttons button');`\n- `let currentInput = '';\n- `let previousValue = null;`\n- `let pendingOperator = null;`\nCreate the function `handleButtonClick(event)` that reads `event.target.dataset.value` and routes the value to appropriate handlers (`appendDigit`, `setOperator`, `calculateResult`, `clearAll`).\nAdd event listeners: `buttons.forEach(btn => btn.addEventListener('click', handleButtonClick));`\nExport (if using modules) the key functions for later tasks.\nThis task sets up the DOM connections used by later calculation and keyboard\u2011handling tasks. It depends on the HTML structure from task 1 and will be used by subsequent logic functions.\n",
+                "integration_details": "Imports: none (vanilla JS). Exposes functions `appendDigit`, `setOperator`, `calculateResult`, `clearAll` (to be defined later) via the global scope or as exported members if using ES modules. Data flow: button clicks update `currentInput` and eventually call `updateDisplay()` (to be defined)."
+            },
+            {
+                "filepath": "app.js",
+                "title": "Implement core calculation logic and display updates",
+                "description": "Extend `app.js` with the core arithmetic functions and UI update helpers:\n- `function appendDigit(digit) { currentInput += digit; updateDisplay(); }`\n- `function setOperator(op) { if (currentInput) { previousValue = parseFloat(currentInput); pendingOperator = op; currentInput = ''; } }\n- `function calculateResult() { if (pendingOperator && currentInput) { const second = parseFloat(currentInput); let result; switch(pendingOperator) { case '+': result = previousValue + second; break; case '-': result = previousValue - second; break; case '*': result = previousValue * second; break; case '/': if (second === 0) { showError('Cannot divide by zero'); return; } result = previousValue / second; break; } previousValue = result; currentInput = result.toString(); pendingOperator = null; updateDisplay(); } }\n- `function clearAll() { currentInput = ''; previousValue = null; pendingOperator = null; updateDisplay(); }\n- `function updateDisplay() { display.value = currentInput || (previousValue !== null ? previousValue : '0'); }\n- `function showError(msg) { display.value = msg; setTimeout(updateDisplay, 1500); }\nThese functions are invoked by the button\u2011click handler from the previous task. They provide the computational backbone and error handling for division by zero.\n",
+                "integration_details": "Uses variables defined in task 3 (`display`, `currentInput`, etc.). No external imports. Functions are attached to the global scope (or exported) so that `handleButtonClick` can call them."
+            },
+            {
+                "filepath": "app.js",
+                "title": "Add keyboard input support and final event wiring",
+                "description": "Complete `app.js` by handling keyboard events and finalizing module exports:\n- Register `document.addEventListener('keydown', handleKeyPress);`\n- Implement `function handleKeyPress(e) { const key = e.key; if (/^[0-9]$/.test(key)) { appendDigit(key); } else if (['+','-','*','/'].includes(key)) { setOperator(key); } else if (key === 'Enter' || key === '=') { calculateResult(); } else if (key === 'Escape' || key === 'c' || key === 'C') { clearAll(); } }\n- Ensure that pressing unsupported keys does not affect the calculator.\n- Optionally expose an initialization function `initCalculator()` that encapsulates the listener setup, and call it at the end of the script.\nThis task depends on the variables and functions from tasks 3 and 4, and provides the final interactive behavior for both mouse and keyboard users.\n",
+                "integration_details": "Continues from previous `app.js` definitions. No new imports. The `initCalculator` function can be called automatically (`initCalculator();`) ensuring the app is ready when the script loads."
+            },
+            {
+                "filepath": "README.md",
+                "title": "Write project README with overview, setup, and usage instructions",
+                "description": "Create `README.md` containing:\n- Project title and brief description.\n- Technologies used (HTML5, CSS3, Vanilla JS).\n- Feature list matching the specification.\n- Setup instructions (clone repo, open `index.html` in a browser).\n- Usage guide describing button clicks, keyboard shortcuts, and error messages.\n- Screenshots placeholders (optional).\nThe README does not depend on code execution but provides essential documentation for users and future developers.\n",
+                "integration_details": "No code integration; serves as documentation for the whole project."
+            }
+        ]
+    }
 }

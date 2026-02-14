@@ -6,8 +6,8 @@ from dotenv import load_dotenv
 from pydantic import BaseModel, Field
 from langgraph.constants import END
 from langgraph.graph import StateGraph
-from langchain.globals import set_verbose, set_debug
-from langchain.agents import create_react_agent
+from langchain_core.globals import set_verbose, set_debug
+from langgraph.prebuilt import create_react_agent
 
 # import local modules
 from .prompts import planner_prompt, architect_prompt, coder_sys_prompt
@@ -91,7 +91,7 @@ if __name__ == "__main__":
     # Run the agent with a user prompt
     user_prompt = "Create a simple calculator web application"
     result = agent.invoke({"user_prompt": user_prompt})
-    print(result)
+    # print(result)
 
     # Save the result to a JSON file
     serializable_result = make_serializable(result)
