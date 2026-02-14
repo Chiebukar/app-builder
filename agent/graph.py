@@ -7,10 +7,12 @@ from pydantic import BaseModel, Field
 from langgraph.constants import END
 from langgraph.graph import StateGraph
 from langchain.globals import set_verbose, set_debug
+from langchain.agents import create_react_agent
 
 # import local modules
 from .prompts import planner_prompt, architect_prompt, coder_sys_prompt
 from .states import Plan, TaskPlan
+from .tools import get_current_directory, write_file, read_file, list_files, run_cmd, init_project_root
 
 load_dotenv() # Load environment variables from .env file
 
@@ -41,14 +43,23 @@ def coder_agent(state: dict) -> dict:
     tasks: list = state.get("task_plan").get("tasks")
     current_task_idx = 0
     current_task = tasks[current_task_idx]
+
+    existing_content = read_file(current_task.filepath)
+
     user_prompt = (
         f"Task: {current_task.description}\n"
+        f"File: {current_task.filepath}\n"
+        f"Existing content:\n{existing_content}\n"
+        "Use write_file(path, content) to save your changes."
     )
     system_prompt = coder_sys_prompt()
+    coder_tools = [write_file, read_file, list_files, get_current_directory]
+    react_agent = create_react_agent(llm, coder_tools)
+    response = react_agent.invoke({"messages": [{"role": "system", "content": system_prompt},
+                                     {"role": "user", "content": user_prompt}]})
 
-    response = llm.invoke(system_prompt + user_prompt)
 
-    return {"code": response.content}  
+    # return {"code": response.content}  
 
     
 

@@ -14,8 +14,17 @@ def project_path(path: str) -> pathlib.Path:
     return p
 
 
-@tool("write_file")
+@tool
 def write_file(path: str, content: str) -> str:
+    """Write a file into the generated project directory.
+
+    Args:
+        path: Relative path (from project root) where the file should be written.
+        content: File content to write as UTF-8.
+
+    Returns:
+        A confirmation string containing the absolute path written.
+    """
     p = project_path(path)
     p.parent.mkdir(parents=True, exist_ok=True)
     with open(p, "w", encoding="utf-8") as f:
@@ -23,8 +32,16 @@ def write_file(path: str, content: str) -> str:
     return f"File written: {p}"
 
 
-@tool("read_file")
+@tool
 def read_file(path: str) -> str:
+    """Read a file from the generated project directory and return its content.
+
+    Args:
+        path: Relative path (from project root) of the file to read.
+
+    Returns:
+        The file content as a string, or an error message if the file is missing.
+    """
     p = project_path(path)
     if not p.exists():
         return f"File not found: {p}"
