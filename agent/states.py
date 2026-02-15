@@ -20,3 +20,8 @@ class Task(BaseModel):
 class TaskPlan(BaseModel):
     tasks: list[Task] = Field(description="A list of steps to be taken to implement the task")
     model_config = ConfigDict(extra="allow")
+
+class CoderState(BaseModel):
+    task_plan: TaskPlan = Field(description="The task plan that the coder agent is working on")
+    current_step_idx: int = Field(description="The index of the current step the coder agent is working on")    
+    current_file_content: str = Field(description="The existing content of the file that the coder agent is working on")    
