@@ -39,43 +39,6 @@ def architect_agent(state: dict) -> dict:
     task_plan = {"plan": plan, "tasks": tasks.tasks}
     return {"task_plan": task_plan}  
 
-# # Define the coder agent
-# def coder_agent(state: dict) -> dict:
-#     coder_state: CoderState = state.get("coder_state")
-
-#     if coder_state is None:
-#         # First time the coder agent is invoked, initialize the coder state
-#         task_plan: TaskPlan = state.get("task_plan")
-#         coder_state: CoderState = {
-#             "task_plan": task_plan,
-#             "current_step_idx": 0,
-#         }
-
-#     steps = coder_state.get("tasks")
-#     if coder_state.get("current_step_idx") >= len(steps):
-#         return {"coder_state": coder_state, "Status": "Done"}
-    
-#     current_task = steps[coder_state.get("current_step_idx")]
-#     existing_content= read_file(current_task.filepath)
-
-#     system_prompt = coder_sys_prompt()
-#     user_prompt = (
-#         f"Task: {current_task.description}\n"
-#         f"File: {current_task.filepath}\n"
-#         f"Existing content:\n{existing_content}\n"
-#         "Use write_file(path, content) to save your changes."
-#     )
-
-    
-#     coder_tools = [write_file, read_file, list_files, get_current_directory]
-#     react_agent = create_react_agent(llm, coder_tools)
-#     react_agent.invoke({"messages": [{"role": "system", "content": system_prompt},
-#                                      {"role": "user", "content": user_prompt}]})
-
-
-#     # Update the coder state to reflect the completion of the current task
-#     coder_state["current_step_idx"] += 1
-#     return {"code_state": coder_state}  
 
 def coder_agent(state: dict) -> dict:
     # 1. Align the key name with what you return at the end ("coder_state")
